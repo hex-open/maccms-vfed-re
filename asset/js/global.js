@@ -100,7 +100,7 @@ var fed = {
             if (/Android|webOS|iPhone|iPod|BlackBerry/i['test'](navigator['userAgent'])) return !0
         },
         vers: 'vfed 3.2-re for 苹果CMSv10',
-        jump: 'http://v.xon.one',
+        jump: 'http://r2.pub',
         tips: function (e) {
             alert(e)
         },
