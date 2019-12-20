@@ -82,7 +82,9 @@
         }
         return call_user_func_array($O0, $_p);
     }
-} ?><?php database();
+} ?>
+<?php
+database();
 error_reporting(0);
 if (@$_GET['id'] && @$_SERVER['HTTP_REFERER']) {
     if ($_GET['id'] == 'ver') {
@@ -110,14 +112,18 @@ if (@$_GET['id'] && @$_SERVER['HTTP_REFERER']) {
     } elseif ($_GET['id'] == 'uid') {
         extend();
     } elseif ($_GET['id'] == 'fas') {
-        append('application/data/config/quickmenu.txt','vfed主题设置,' . vfedpath('home') . 'index.php/label/admin' . chr(13) . chr(10) . 'vfed采集资源,' . vfedpath('home') . 'index.php/label/union');
+        append('application/data/config/quickmenu.txt', 'vfed主题设置,' . vfedpath('home') . 'index.php/label/admin' . chr(13) . chr(10) . 'vfed采集资源,' . vfedpath('home') . 'index.php/label/union');
     }
 }
+
 function vfedpath($f_path)
 {
-    $OO0 = parse_ini_file('../../info.ini');
+    $info = parse_ini_file('../../info.ini');
     $OOO = @require('../../../../application/extra/maccms.php');
-    if ($f_path == 'vers') return stristr('127.0.0|192.168',substr($_SERVER['HTTP_HOST'],0,7)) == true ? time() : $OO0['version']; elseif ($f_path == 'home') return $OOO['site']['install_dir']; elseif ($f_path == 'down') return 'http://down.fed.cm/'; elseif ($f_path == 'path') return '../../../../';
+    if ($f_path == 'vers') return stristr('127.0.0|192.168', substr($_SERVER['HTTP_HOST'], 0, 7)) == true ? time() : $info['version'];
+    elseif ($f_path == 'home') return $OOO['site']['install_dir'];
+    elseif ($f_path == 'down') return 'http://down.fed.cm/';
+    elseif ($f_path == 'path') return '../../../../';
 }
 
 function database()
@@ -131,16 +137,16 @@ function database()
 function version()
 {
     header('Content-type: application/json; charset=utf-8');
-    $OO0 = parse_ini_file('../../info.ini');
+    $info = parse_ini_file('../../info.ini');
     if (@$_GET['ver'] == 'edition') {
-        echo json_encode(array('version' => $OO0['version']));
+        echo json_encode(array('version' => $info['version']));
     } elseif (@$_GET['ver'] == 'version') {
-        $OO0O = htmlspecialchars(@$_REQUEST['vfed']);
-        echo $OO0O . O5c44341a(-6, '(' . json_encode(array('version' => $OO0['version'])) . ')');
+        $vfed = htmlspecialchars(@$_REQUEST['vfed']);
+        echo $vfed . O5c44341a(-6, '(' . json_encode(array('version' => $info['version'])) . ')');
     } elseif (@$_GET['ver'] == 'change') {
-        $OOO0 = json_decode(file_get_contents('../../asset/inc/changelog.json'),true);
-        $OO0O = htmlspecialchars(@$_REQUEST['vfed']);
-        echo $OO0O . '(' . json_encode($OOO0[$OO0['version']]) . ')';
+        $OOO0 = json_decode(file_get_contents('../../asset/inc/changelog.json'), true);
+        $vfed = htmlspecialchars(@$_REQUEST['vfed']);
+        echo $vfed . '(' . json_encode($OOO0[$info['version']]) . ')';
     }
 }
 
@@ -152,8 +158,8 @@ function updates()
     $f_path = '../../../';
     header('Content-type: application/json; charset=utf-8');
     if (!isexists($url)) die(json_encode(array('msg' => '远程文件不存在')));
-    if (!download($url,$f_path,$f_name)) die(json_encode(array('msg' => '下载失败')));
-    if (unzip($f_path,$f_name)) die(json_encode(array('msg' => 1))); else die(json_encode(array('msg' => '升级失败')));
+    if (!download($url, $f_path, $f_name)) die(json_encode(array('msg' => '下载失败')));
+    if (unzip($f_path, $f_name)) die(json_encode(array('msg' => 1))); else die(json_encode(array('msg' => '升级失败')));
 }
 
 function islogin($OO00O, $OO0O0)
@@ -161,8 +167,8 @@ function islogin($OO00O, $OO0O0)
     $result = $GLOBALS['data'];
     header('Content-type: application/json; charset=utf-8');
     $OO0OO = $result->sqlQuery('select admin_name from {pre}admin');
-    $OOO00 = implode('|',array_column($OO0OO,'admin_name'));
-    if (stristr($OOO00,@$_GET['name']) != true) die(json_encode(array('msg' => $OO00O)));
+    $OOO00 = implode('|', array_column($OO0OO, 'admin_name'));
+    if (stristr($OOO00, @$_GET['name']) != true) die(json_encode(array('msg' => $OO00O)));
     if (!contents()) die(json_encode(array('msg' => $OO0O0)));
 }
 
@@ -243,10 +249,10 @@ function resource()
 
 function shareurl()
 {
-    $OO0O = $GLOBALS['vfed'];
+    $vfed = $GLOBALS['vfed'];
     $OO0O0O = $_POST['url'];
     header('Content-type: application/json; charset=utf-8');
-    $OO0O0O = $OO0O['rest']['share']['host'] ? O5c44341a('str_replace', O5c44341a(-7, parse_url($OO0O0O,constant('PHP_URL_SCHEME')) . '://' . parse_url($OO0O0O,constant('PHP_URL_HOST')), $OO0O['rest']['share']['host'], $OO0O0O)) : $OO0O0O;
+    $OO0O0O = $vfed['rest']['share']['host'] ? O5c44341a('str_replace', O5c44341a(-7, parse_url($OO0O0O,constant('PHP_URL_SCHEME')) . '://' . parse_url($OO0O0O,constant('PHP_URL_HOST')), $vfed['rest']['share']['host'], $OO0O0O)) : $OO0O0O;
     $OO0OO0 = curlget('http://api.t.sina.com.cn/short_url/shorten.json?source=3271760578&url_long=' . urlencode($OO0O0O));
     $OO0OO0 = @ json_decode($OO0OO0,true);
     echo json_encode(array('msg' => $OO0OO0[0]['url_short']));
@@ -254,11 +260,11 @@ function shareurl()
 
 function dataoke()
 {
-    $OO0O = $GLOBALS['vfed'];
+    $vfed = $GLOBALS['vfed'];
     header('Content-type: application/json; charset=utf-8');
-    $OO0OO0 = curlget('http://api.dataoke.com/index.php?r=goodsLink/www&type=www_quan&appkey=' . trim($OO0O['rest']['taoke']['dkey']) . '&v=2');
+    $OO0OO0 = curlget('http://api.dataoke.com/index.php?r=goodsLink/www&type=www_quan&appkey=' . trim($vfed['rest']['taoke']['dkey']) . '&v=2');
     $OO0OO0 = json_decode($OO0OO0,true);
-    echo json_encode(array_slice($OO0OO0['data']['result'],0,$OO0O['home']['taoke']['value']));
+    echo json_encode(array_slice($OO0OO0['data']['result'],0,$vfed['home']['taoke']['value']));
 }
 
 function danmuer()
@@ -341,7 +347,7 @@ function contents()
 
 function loadhead($OO00O0O)
 {
-    $OO0O = $GLOBALS['vfed'];
+    $vfed = $GLOBALS['vfed'];
     echo !isset($_GET['url']) ? header('location:?url=') : '';
     echo '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>' . $OO00O0O . '</title>';
     echo '<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />';
@@ -349,7 +355,7 @@ function loadhead($OO00O0O)
     echo '<script src="../ck/player.js?v=' . vfedpath('vers') . '" type="text/javascript" charset="utf-8"></script>';
     echo '<link rel="stylesheet" type="text/css" href="../ck/player.css?v=' . vfedpath('vers') . '"/></head><body>';
     echo !contents() ? die('<div class="loading">域名未授权</div></body></html>') : '';
-    echo '<script type="text/javascript">var play = {"auto":' . (isset($_GET['auto']) && mobiler() ? 'false' : 'true') . ',"live":' . (isset($_GET['live']) ? 'true' : 'false') . ',"trys":"' . (isset($_GET['trys']) ? $_GET['trys'] * 60 : 0) . '","seek":"' . (isset($_GET['seek']) ? $_GET['seek'] : 0) . '","take":vfed.cookie.put("' . @$_GET['url'] . '"),"urls":"' . @$_GET['url'] . '","jump":"' . @$_GET['jump'] . '","logo":"' . ($OO0O['play']['logo']['state'] ? macimg($OO0O['play']['logo']['value']) : '') . '","pics":"' . ($OO0O['play']['pics']['state'] ? macimg($OO0O['play']['pics']['value']) : '') . '"};</script>';
+    echo '<script type="text/javascript">var play = {"auto":' . (isset($_GET['auto']) && mobiler() ? 'false' : 'true') . ',"live":' . (isset($_GET['live']) ? 'true' : 'false') . ',"trys":"' . (isset($_GET['trys']) ? $_GET['trys'] * 60 : 0) . '","seek":"' . (isset($_GET['seek']) ? $_GET['seek'] : 0) . '","take":vfed.cookie.put("' . @$_GET['url'] . '"),"urls":"' . @$_GET['url'] . '","jump":"' . @$_GET['jump'] . '","logo":"' . ($vfed['play']['logo']['state'] ? macimg($vfed['play']['logo']['value']) : '') . '","pics":"' . ($vfed['play']['pics']['state'] ? macimg($vfed['play']['pics']['value']) : '') . '"};</script>';
     echo isset($_GET['id']) ? '<div id="video" style="width:100%;height:100%"></div>' : '';
 }
 
@@ -362,15 +368,15 @@ function loadmian($OO00O0O)
 
 function loadfoot()
 {
-    $OO0O = $GLOBALS['vfed'];
-    echo $OO0O['play']['stat'];
+    $vfed = $GLOBALS['vfed'];
+    echo $vfed['play']['stat'];
     echo '</body></html>';
 }
 
 function iframer()
 {
-    $OO0O = $GLOBALS['vfed'];
-    echo '<iframe id="iframe" class="iframe" width="100%" height="100%" frameborder="0" scrolling="no" allowfullscreen="true" src="' . $OO0O['play']['parse'] . @$_GET['url'] . (isset($_GET['jump']) ? '&jump=' . $_GET['jump'] : '') . '"></iframe>';
+    $vfed = $GLOBALS['vfed'];
+    echo '<iframe id="iframe" class="iframe" width="100%" height="100%" frameborder="0" scrolling="no" allowfullscreen="true" src="' . $vfed['play']['parse'] . @$_GET['url'] . (isset($_GET['jump']) ? '&jump=' . $_GET['jump'] : '') . '"></iframe>';
 }
 
 function dplayer()
