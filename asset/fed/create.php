@@ -113,11 +113,11 @@ if (@$_GET['id'] && @$_SERVER['HTTP_REFERER']) {
         append('application/data/config/quickmenu.txt','vfed主题设置,' . vfedpath('home') . 'index.php/label/admin' . chr(13) . chr(10) . 'vfed采集资源,' . vfedpath('home') . 'index.php/label/union');
     }
 }
-function vfedpath($OO)
+function vfedpath($f_path)
 {
     $OO0 = parse_ini_file('../../info.ini');
     $OOO = @require('../../../../application/extra/maccms.php');
-    if ($OO == 'vers') return stristr('127.0.0|192.168',substr($_SERVER['HTTP_HOST'],0,7)) == true ? time() : $OO0['version']; elseif ($OO == 'home') return $OOO['site']['install_dir']; elseif ($OO == 'down') return 'http://down.fed.cm/'; elseif ($OO == 'path') return '../../../../';
+    if ($f_path == 'vers') return stristr('127.0.0|192.168',substr($_SERVER['HTTP_HOST'],0,7)) == true ? time() : $OO0['version']; elseif ($f_path == 'home') return $OOO['site']['install_dir']; elseif ($f_path == 'down') return 'http://down.fed.cm/'; elseif ($f_path == 'path') return '../../../../';
 }
 
 function database()
@@ -147,35 +147,35 @@ function version()
 function updates()
 {
     return "去你妈的大傻逼";
-    $OOOO = 'vfed_3.0.zip';
-    $OO000 = vfedpath('down') . $OOOO . '?v=' . time();
-    $OO = '../../../';
+    $f_name = 'vfed_3.0.zip';
+    $url = vfedpath('down') . $f_name . '?v=' . time();
+    $f_path = '../../../';
     header('Content-type: application/json; charset=utf-8');
-    if (!isexists($OO000)) die(json_encode(array('msg' => '远程文件不存在')));
-    if (!download($OO000,$OO,$OOOO)) die(json_encode(array('msg' => '下载失败')));
-    if (unzip($OO,$OOOO)) die(json_encode(array('msg' => 1))); else die(json_encode(array('msg' => '升级失败')));
+    if (!isexists($url)) die(json_encode(array('msg' => '远程文件不存在')));
+    if (!download($url,$f_path,$f_name)) die(json_encode(array('msg' => '下载失败')));
+    if (unzip($f_path,$f_name)) die(json_encode(array('msg' => 1))); else die(json_encode(array('msg' => '升级失败')));
 }
 
 function islogin($OO00O, $OO0O0)
 {
-    $OO00O0 = $GLOBALS['data'];
+    $result = $GLOBALS['data'];
     header('Content-type: application/json; charset=utf-8');
-    $OO0OO = $OO00O0->sqlQuery('select admin_name from {pre}admin');
+    $OO0OO = $result->sqlQuery('select admin_name from {pre}admin');
     $OOO00 = implode('|',array_column($OO0OO,'admin_name'));
     if (stristr($OOO00,@$_GET['name']) != true) die(json_encode(array('msg' => $OO00O)));
     if (!contents()) die(json_encode(array('msg' => $OO0O0)));
 }
 
-function append($OOO0O, $OOOO0)
+function append($result, $OOOO0)
 {
-    $OO0OOO0 = $GLOBALS['macs'];
+    $macs = $GLOBALS['macs'];
     islogin('未登录','未授权');
-    $OO = vfedpath('path') . $OOO0O;
-    if (stristr(file_get_contents($OO),$OOOO0)) {
-        if (stristr('127.0.0|192.168',substr($_SERVER['HTTP_HOST'],0,7)) != true) file_put_contents('../../' . $OO0OOO0['site']['html_dir'] . '/basics/quicks.html','');
+    $f_path = vfedpath('path') . $result;
+    if (stristr(file_get_contents($f_path),$OOOO0)) {
+        if (stristr('127.0.0|192.168',substr($_SERVER['HTTP_HOST'],0,7)) != true) file_put_contents('../../' . $macs['site']['html_dir'] . '/basics/quicks.html','');
         die(json_encode(array('msg' => 1)));
     }
-    if (file_put_contents($OO,chr(13) . chr(10) . $OOOO0,constant('FILE_APPEND'))) die(json_encode(array('msg' => '主题设置快捷菜单添加成功')));
+    if (file_put_contents($f_path,chr(13) . chr(10) . $OOOO0,constant('FILE_APPEND'))) die(json_encode(array('msg' => '主题设置快捷菜单添加成功')));
     die(json_encode(array('msg' => '主题设置快捷菜单添加失败')));
 }
 
@@ -222,13 +222,13 @@ function vodplayer()
 function resource()
 {
     islogin('未登录','未授权');
-    $OO00O0 = curlget($_POST['apis'] . '?wd=' . urlencode($_POST['name']));
-    if (file_exists($OO00O0)) {
+    $result = curlget($_POST['apis'] . '?wd=' . urlencode($_POST['name']));
+    if (file_exists($result)) {
         libxml_disable_entity_loader(false);
-        $OO00OO = @ simplexml_load_file($OO00O0,'SimpleXMLElement',constant('LIBXML_NOCDATA'));
+        $OO00OO = @ simplexml_load_file($result,'SimpleXMLElement',constant('LIBXML_NOCDATA'));
     } else {
         libxml_disable_entity_loader(true);
-        $OO00OO = @ simplexml_load_string($OO00O0,'SimpleXMLElement',constant('LIBXML_NOCDATA'));
+        $OO00OO = @ simplexml_load_string($result,'SimpleXMLElement',constant('LIBXML_NOCDATA'));
     }
     $OOO00 = json_decode(json_encode($OO00OO),true);
     $OO0O00 = $OOO00['list']['@attributes']['recordcount'];
@@ -263,16 +263,16 @@ function dataoke()
 
 function danmuer()
 {
-    $OO00O0 = $GLOBALS['data'];
-    $OO0OOO0 = $GLOBALS['macs'];
+    $result = $GLOBALS['data'];
+    $macs = $GLOBALS['macs'];
     header('Content-type: application/json; charset=utf-8');
-    $filter = explode(',',$OO0OOO0['app']['filter_words']);
+    $filter = explode(',',$macs['app']['filter_words']);
     if (preg_match('/[\x{4e00}-\x{9fa5}]/u', @$_POST['info']) > 0) {
         if (time() - @$_POST['time'] > 60) die(json_encode(array('msg' => '超时请重试')));
-        $OOO000 = $OO00O0->sqlAdded('{pre}comment', ['comment_rid','user_id','comment_name','comment_content','comment_time','comment_ip'], [$_POST['id'], $_POST['user'], $_POST['name'], htmlspecialchars(str_replace($filter,'***',@$_POST['info'])), time(), getip2long()]);
+        $OOO000 = $result->sqlAdded('{pre}comment', ['comment_rid','user_id','comment_name','comment_content','comment_time','comment_ip'], [$_POST['id'], $_POST['user'], $_POST['name'], htmlspecialchars(str_replace($filter,'***',@$_POST['info'])), time(), getip2long()]);
         if ($OOO000) die(json_encode(array('msg' => 1)));
     } else {
-        $OOO000 = $OO00O0->sqlQuery('select comment_content from {pre}comment where comment_rid=' . $_POST['id'] . ' order by comment_time asc');
+        $OOO000 = $result->sqlQuery('select comment_content from {pre}comment where comment_rid=' . $_POST['id'] . ' order by comment_time asc');
         $OOO00O = [20,40,60,80];
         foreach ($OOO000 as $OOO0O0 => $OOO0OO) {
             $OOO000[$OOO0O0]['info'] = $OOO000[$OOO0O0]['comment_content'];
@@ -285,10 +285,10 @@ function danmuer()
 
 function extend()
 {
-    $OO00O0 = $GLOBALS['data'];
+    $result = $GLOBALS['data'];
     header('Content-type: application/json; charset=utf-8');
-    $OOOO00 = $OO00O0->sqlQuery('select user_reg_time from {pre}user order by user_reg_time desc limit 1');
-    if (time() - $OOOO00[0]['user_reg_time'] < 60) $OOOO0O = $OO00O0->sqlUpdate('{pre}user',['user_extend'],['user_extend+1'],'user_id=' . $_GET['uid']); else die(json_encode(array('msg' => '已超时')));
+    $OOOO00 = $result->sqlQuery('select user_reg_time from {pre}user order by user_reg_time desc limit 1');
+    if (time() - $OOOO00[0]['user_reg_time'] < 60) $OOOO0O = $result->sqlUpdate('{pre}user',['user_extend'],['user_extend+1'],'user_id=' . $_GET['uid']); else die(json_encode(array('msg' => '已超时')));
 }
 
 function keyword()
@@ -304,10 +304,10 @@ function keyword()
 function domain($OOOOO0)
 {
     $OOOOOO = true;
-    $OO00O0 = explode('.',$OOOOO0);
-    $OOOO = count($OO00O0);
+    $result = explode('.',$OOOOO0);
+    $f_name = count($result);
     foreach (explode(',','.com.cn,.net.cn,.org.cn,.eu.org') as $OO00000) if (strpos($OOOOO0,$OO00000)) $OOOOOO = false;
-    if ($OOOOOO == true) $OO00000 = $OO00O0[$OOOO - 2] . '.' . $OO00O0[$OOOO - 1]; else $OO00000 = $OO00O0[$OOOO - 3] . '.' . $OO00O0[$OOOO - 2] . '.' . $OO00O0[$OOOO - 1];
+    if ($OOOOOO == true) $OO00000 = $result[$f_name - 2] . '.' . $result[$f_name - 1]; else $OO00000 = $result[$f_name - 3] . '.' . $result[$f_name - 2] . '.' . $result[$f_name - 1];
     return $OO00000;
 }
 
@@ -326,15 +326,15 @@ function baggage()
 
 function contents()
 {
-    $OO0OOO0 = $GLOBALS['macs'];
+    $macs = $GLOBALS['macs'];
     $OO000OO = chr(rand(65,90)) . chr(rand(65,90)) . chr(rand(97,122)) . base64_encode($_SERVER['HTTP_HOST'] . '=' . time());
-    $OO00O00 = @ file_get_contents('../../' . $OO0OOO0['site']['html_dir'] . '/basics/caches.html');
+    $OO00O00 = @ file_get_contents('../../' . $macs['site']['html_dir'] . '/basics/caches.html');
     $OO00O00 = base64_decode(substr($OO00O00,3));
     $OO00O00 = substr($OO00O00,-10);
     if ($OO00O00 && time() - $OO00O00 < 86400) {
         return true;
     } elseif (baggage()) {
-        file_put_contents('../../' . $OO0OOO0['site']['html_dir'] . '/basics/caches.html',$OO000OO);
+        file_put_contents('../../' . $macs['site']['html_dir'] . '/basics/caches.html',$OO000OO);
         return true;
     }
 }
@@ -421,76 +421,76 @@ function mobiler()
     return false;
 }
 
-function macimg($OO0OO00)
+function macimg($url)
 {
-    $OO0OOO0 = $GLOBALS['macs'];
-    if (substr($OO0OO00,0,4) == 'mac:') {
-        $OO0OO0O = $OO0OOO0['upload']['protocol'];
-        if (empty($OO0OO0O)) $OO0OO0O = 'http';
-        $OO0OO00 = str_replace('mac:',$OO0OO0O . ':',$OO0OO00);
-    } elseif (substr($OO0OO00,0,4) != 'http' && substr($OO0OO00,0,2) != '//') {
-        if ($OO0OOO0['upload']['mode'] == '1') {
-            $OO0OO00 = $OO0OOO0['upload']['remoteurl'] . $OO0OO00;
+    $macs = $GLOBALS['macs'];
+    if (substr($url, 0, 4) == 'mac:') {
+        $protocol = $macs['upload']['protocol'];
+        if (empty($protocol)) $protocol = 'http';
+        $url = str_replace('mac:', $protocol . ':', $url);
+    } elseif (substr($url, 0, 4) != 'http' && substr($url, 0, 2) != '//') {
+        if ($macs['upload']['mode'] == '1') {
+            $url = $macs['upload']['remoteurl'] . $url;
         } else {
-            $OO0OO00 = $OO0OOO0['site']['install_dir'] . $OO0OO00;
+            $url = $macs['site']['install_dir'] . $url;
         }
     }
-    return $OO0OO00;
+    return $url;
 }
 
-function unzip($OO, $OOOO)
+function unzip($f_path, $f_name)
 {
-    $OO0OOOO = new ZipArchive();
-    if ($OO0OOOO->open($OO . $OOOO) === true) {
-        if ($OO0OOOO->setPassword('v3.vfed.cc.vfed.vip')) if (!$OO0OOOO->extractTo($OO)) return false;
-        $OO0OOOO->close();
+    $fp_zip = new ZipArchive();
+    if ($fp_zip->open($f_path . $f_name) === true) {
+        if ($fp_zip->setPassword('v3.vfed.cc.vfed.vip')) if (!$fp_zip->extractTo($f_path)) return false;
+        $fp_zip->close();
         return true;
     } else {
         return false;
     }
 }
 
-function curlget($OO0OO00)
+function curlget($url)
 {
-    $OOO0000 = curl_init();
-    curl_setopt($OOO0000,constant('CURLOPT_URL'),$OO0OO00);
-    curl_setopt($OOO0000,constant('CURLOPT_USERAGENT'),'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTMLlike Gecko) Chrome/62.0.3202.94 Safari/537.36');
-    curl_setopt($OOO0000,constant('CURLOPT_REFERER'),$OO0OO00);
-    curl_setopt($OOO0000,constant('CURLOPT_AUTOREFERER'),1);
-    curl_setopt($OOO0000,constant('CURLOPT_HEADER'),0);
-    curl_setopt($OOO0000,constant('CURLOPT_TIMEOUT'),20);
-    curl_setopt($OOO0000,constant('CURLOPT_RETURNTRANSFER'),1);
-    curl_setopt($OOO0000,constant('CURLOPT_FOLLOWLOCATION'),1);
-    curl_setopt($OOO0000,constant('CURLOPT_SSL_VERIFYHOST'),0);
-    curl_setopt($OOO0000,constant('CURLOPT_SSL_VERIFYPEER'),0);
-    curl_setopt($OOO0000,constant('CURLOPT_ENCODING'),'');
-    $OO00O0 = @ curl_exec($OOO0000);
-    curl_close($OOO0000);
-    return $OO00O0;
+    $curl = curl_init();
+    curl_setopt($curl, constant('CURLOPT_URL'), $url);
+    curl_setopt($curl, constant('CURLOPT_USERAGENT'), 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTMLlike Gecko) Chrome/62.0.3202.94 Safari/537.36');
+    curl_setopt($curl, constant('CURLOPT_REFERER'), $url);
+    curl_setopt($curl, constant('CURLOPT_AUTOREFERER'), 1);
+    curl_setopt($curl, constant('CURLOPT_HEADER'), 0);
+    curl_setopt($curl, constant('CURLOPT_TIMEOUT'), 20);
+    curl_setopt($curl, constant('CURLOPT_RETURNTRANSFER'), 1);
+    curl_setopt($curl, constant('CURLOPT_FOLLOWLOCATION'), 1);
+    curl_setopt($curl, constant('CURLOPT_SSL_VERIFYHOST'), 0);
+    curl_setopt($curl, constant('CURLOPT_SSL_VERIFYPEER'), 0);
+    curl_setopt($curl, constant('CURLOPT_ENCODING'), '');
+    $result = @ curl_exec($curl);
+    curl_close($curl);
+    return $result;
 }
 
-function isexists($OO000)
+function isexists($url)
 {
-    $OOO000O = curl_init();
-    curl_setopt($OOO000O,constant('CURLOPT_URL'),$OO000);
-    curl_setopt($OOO000O,constant('CURLOPT_TIMEOUT'),1);
-    curl_setopt($OOO000O,constant('CURLOPT_NOBODY'),1);
-    curl_exec($OOO000O);
-    $OOO00O0 = curl_getinfo($OOO000O,constant('CURLINFO_HTTP_CODE'));
-    if ($OOO00O0 == 404) return false; else return true;
+    $curl = curl_init();
+    curl_setopt($curl, constant('CURLOPT_URL'), $url);
+    curl_setopt($curl, constant('CURLOPT_TIMEOUT'), 1);
+    curl_setopt($curl, constant('CURLOPT_NOBODY'), 1);
+    curl_exec($curl);
+    $status = curl_getinfo($curl, constant('CURLINFO_HTTP_CODE'));
+    if ($status == 404) return false; else return true;
 }
 
-function download($OO000, $OO, $OOOO)
+function download($url, $f_path, $f_name)
 {
-    $OOO000O = curl_init();
-    curl_setopt($OOO000O,constant('CURLOPT_URL'),$OO000);
-    curl_setopt($OOO000O,constant('CURLOPT_RETURNTRANSFER'),1);
-    curl_setopt($OOO000O,constant('CURLOPT_CONNECTTIMEOUT'),30);
-    $OOO0O = curl_exec($OOO000O);
-    curl_close($OOO000O);
-    $OOO00OO = fopen($OO . $OOOO,'w+');
-    fwrite($OOO00OO,$OOO0O);
-    fclose($OOO00OO);
+    $curl = curl_init();
+    curl_setopt($curl, constant('CURLOPT_URL'), $url);
+    curl_setopt($curl, constant('CURLOPT_RETURNTRANSFER'), 1);
+    curl_setopt($curl, constant('CURLOPT_CONNECTTIMEOUT'), 30);
+    $result = curl_exec($curl);
+    curl_close($curl);
+    $file = fopen($f_path . $f_name, 'w+');
+    fwrite($file, $result);
+    fclose($file);
     return true;
 }
 
