@@ -266,10 +266,10 @@ function danmuer()
     $OO00O0 = $GLOBALS['data'];
     $OO0OOO0 = $GLOBALS['macs'];
     header('Content-type: application/json; charset=utf-8');
-    $OO0OOO = explode(',',$OO0OOO0['app']['filter_words']);
+    $filter = explode(',',$OO0OOO0['app']['filter_words']);
     if (preg_match('/[\x{4e00}-\x{9fa5}]/u', @$_POST['info']) > 0) {
         if (time() - @$_POST['time'] > 60) die(json_encode(array('msg' => '超时请重试')));
-        $OOO000 = O5c44341a([$OO00O0,'sqlAdded'], O5c44341a(-7, '{pre}comment', ['comment_rid','user_id','comment_name','comment_content','comment_time','comment_ip'], O5c44341a(-7, $_POST['id'], $_POST['user'], $_POST['name'], htmlspecialchars(str_replace($filter,'***',@$_POST['info'])), time(), getip2long())));
+        $OOO000 = $OO00O0->sqlAdded('{pre}comment', ['comment_rid','user_id','comment_name','comment_content','comment_time','comment_ip'], [$_POST['id'], $_POST['user'], $_POST['name'], htmlspecialchars(str_replace($filter,'***',@$_POST['info'])), time(), getip2long()]);
         if ($OOO000) die(json_encode(array('msg' => 1)));
     } else {
         $OOO000 = $OO00O0->sqlQuery('select comment_content from {pre}comment where comment_rid=' . $_POST['id'] . ' order by comment_time asc');
