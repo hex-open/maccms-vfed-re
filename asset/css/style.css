@@ -492,8 +492,8 @@ body { padding-bottom: 3.4375rem }
 .fed-marg-top, .fed-marg-tops { margin-top: 1.25rem }
 .fed-head-info { height: 5rem }
 .fed-menu-info { z-index: 1 }
-.fed-menu-info .fed-menu-logo { padding: .9375rem 0; width: 7.5rem }
-.fed-menu-info .fed-menu-logo img { width: 7.5rem; height: 3.125rem }
+.fed-menu-info .fed-menu-logo { padding: .9375rem 0; width: 8.75rem }
+.fed-menu-info .fed-menu-logo img { width: 8.75rem; height: 3.125rem }
 .fed-menu-info .fed-menu-title { line-height: 5rem; padding: 0 .625rem }
 .fed-head-info .fed-navs-search { padding: 1.375rem 12.1875rem 1.375rem 15%; z-index: 0 }
 .fed-head-info .fed-navs-search .fed-navs-cuts { line-height: 36px; left: 15px }
