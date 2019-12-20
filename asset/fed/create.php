@@ -136,11 +136,11 @@ function version()
         echo json_encode(array('version' => $OO0['version']));
     } elseif (@$_GET['ver'] == 'version') {
         $OO0O = htmlspecialchars(@$_REQUEST['vfed']);
-        echo $OO0O . O5c44341a(-6, () . json_encode(array('version' => $OO0['version'])) . '');
+        echo $OO0O . O5c44341a(-6, '(' . json_encode(array('version' => $OO0['version'])) . ')');
     } elseif (@$_GET['ver'] == 'change') {
         $OOO0 = json_decode(file_get_contents('../../asset/inc/changelog.json'),true);
         $OO0O = htmlspecialchars(@$_REQUEST['vfed']);
-        echo $OO0O . '() . json_encode($OOO0[$OO0['version']]) . ''';
+        echo $OO0O . '(' . json_encode($OOO0[$OO0['version']]) . ')';
     }
 }
 
@@ -349,7 +349,7 @@ function loadhead($OO00O0O)
     echo '<script src="../ck/player.js?v=' . vfedpath('vers') . '" type="text/javascript" charset="utf-8"></script>';
     echo '<link rel="stylesheet" type="text/css" href="../ck/player.css?v=' . vfedpath('vers') . '"/></head><body>';
     echo !contents() ? die('<div class="loading">域名未授权</div></body></html>') : '';
-    echo '<script type="text/javascript">var play = {"auto":' . (isset($_GET['auto']) && mobiler() ? 'false' : 'true') . ',"live":' . (isset($_GET['live']) ? 'true' : 'false') . ',"trys":"' . (isset($_GET['trys']) ? $_GET['trys'] * 60 : 0) . '","seek":"' . (isset($_GET['seek']) ? $_GET['seek'] : 0) . '","take":vfed.cookie.put(") . @$_GET['url'] . '"',"urls":"' . @$_GET['url'] . '","jump":"' . @$_GET['jump'] . '","logo":"' . ($OO0O['play']['logo']['state'] ? macimg($OO0O['play']['logo']['value']) : '') . '","pics":"' . ($OO0O['play']['pics']['state'] ? macimg($OO0O['play']['pics']['value']) : '') . '"};</script>';
+    echo '<script type="text/javascript">var play = {"auto":' . (isset($_GET['auto']) && mobiler() ? 'false' : 'true') . ',"live":' . (isset($_GET['live']) ? 'true' : 'false') . ',"trys":"' . (isset($_GET['trys']) ? $_GET['trys'] * 60 : 0) . '","seek":"' . (isset($_GET['seek']) ? $_GET['seek'] : 0) . '","take":vfed.cookie.put("' . @$_GET['url'] . '"),"urls":"' . @$_GET['url'] . '","jump":"' . @$_GET['jump'] . '","logo":"' . ($OO0O['play']['logo']['state'] ? macimg($OO0O['play']['logo']['value']) : '') . '","pics":"' . ($OO0O['play']['pics']['state'] ? macimg($OO0O['play']['pics']['value']) : '') . '"};</script>';
     echo isset($_GET['id']) ? '<div id="video" style="width:100%;height:100%"></div>' : '';
 }
 
@@ -415,7 +415,7 @@ function mobiler()
     if (isset($_SERVER['HTTP_VIA'])) return stristr($_SERVER['HTTP_VIA'],'wap') ? true : false;
     if (isset($_SERVER['HTTP_USER_AGENT'])) {
         $OO0O0OO = ['nokia','sony','ericsson','mot','samsung','htc','sgh','lg','sharp','sie-','philips','panasonic','alcatel','lenovo','iphone','ipod','blackberry','meizu','android','netfront','symbian','ucweb','windowsce','palm','operamini','operamobi','openwave','nexusone','cldc','midp','wap','mobile'];
-        if (preg_match('/() . implode('|',$OO0O0OO) . ''/i', strtolower($_SERVER['HTTP_USER_AGENT']))) return true;
+        if (preg_match('/(' . implode('|',$OO0O0OO) . ')/i', strtolower($_SERVER['HTTP_USER_AGENT']))) return true;
     }
     if (isset($_SERVER['HTTP_ACCEPT'])) if ((strpos($_SERVER['HTTP_ACCEPT'],'vnd.wap.wml') !== false) && (strpos($_SERVER['HTTP_ACCEPT'],'text/html') === false || (strpos($_SERVER['HTTP_ACCEPT'],'vnd.wap.wml') < strpos($_SERVER['HTTP_ACCEPT'],'text/html')))) return true;
     return false;
@@ -541,10 +541,10 @@ class AppMysqli
             $OO0000OO = false;
             foreach ($OO00000O as $OO000OO0) {
                 if ($OO0000OO) $OO000O0O .= ',';
-                $OO000O0O .= '|||' . $OO000OO0 . '|||';
+                $OO000O0O .= '\'' . $OO000OO0 . '\'';
                 $OO0000OO = true;
             }
-            $OOOOO0O = 'INSERT INTO ' . $OOOOOOO . ' () . $OO0000O0 . '' VALUES() . $OO000O0O . ''';
+            $OOOOO0O = 'INSERT INTO ' . $OOOOOOO . ' (' . $OO0000O0 . ') VALUES(' . $OO000O0O . ')';
             $OOO00 = $this->sqlMysql($OOOOO0O);
         }
         return $OOO00;
