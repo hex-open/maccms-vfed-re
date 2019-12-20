@@ -380,19 +380,19 @@ function dplayer()
     echo '<script src="../ck/p2p.min.js?v=' . vfedpath('vers') . '" type="text/javascript" charset="utf-8"></script>';
     echo '<script src="../ck/hls.min.js?v=' . vfedpath('vers') . '" type="text/javascript" charset="utf-8"></script>';
     echo '<script src="../ck/dplayer.js?v=' . vfedpath('vers') . '" type="text/javascript" charset="utf-8"></script>';
-    echo '<script type="text/javascript">vfed.player.' . (@$_GET['id'] == 'peer' ? 'eplayer' : 'dplayer') . '(play.autoplay.live, play.trysplay.seek, play.takeplay.urls, play.jumpplay.logo, play.pics);</script>';
+    echo '<script type="text/javascript">vfed.player.' . (@$_GET['id'] == 'peer' ? 'eplayer' : 'dplayer') . '(play.autoplay.live, play.trys, play.seek, play.take, play.urls, play.jump, play.logo, play.pics);</script>';
 }
 
 function cplayer()
 {
     echo '<script src="../ck/ckplayer.js?v=' . vfedpath('vers') . '" type="text/javascript" charset="utf-8"></script>';
-    echo '<script type="text/javascript">var player = new ckplayer();vfed.player.cplayer(play.autoplay.live, play.trysplay.seek, play.takeplay.urls, play.jumpplay.logo, play.pics);</script>';
+    echo '<script type="text/javascript">var player = new ckplayer();vfed.player.cplayer(play.autoplay.live, play.trys, play.seek, play.take, play.urls, play.jump, play.logo, play.pics);</script>';
 }
 
 function aplayer()
 {
     echo '<script src="../ck/aliplayer.js?v=' . vfedpath('vers') . '" type="text/javascript" charset="utf-8"></script>';
-    echo '<script type="text/javascript">vfed.player.aplayer(play.autoplay.live, play.trysplay.seek, play.takeplay.urls, play.jumpplay.logo, play.pics);</script>';
+    echo '<script type="text/javascript">vfed.player.aplayer(play.autoplay.live, play.trys, play.seek, play.take, play.urls, play.jump, play.logo, play.pics);</script>';
 }
 
 function getip2long()
